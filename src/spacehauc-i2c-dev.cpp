@@ -7,27 +7,27 @@
 #include <fcntl.h>
 using std::string;
 
-I2C-Device::I2C-Device() {}
+I2C_Device::I2C_Device() {}
 
-I2C-Device::~I2C-Device() {}
+I2C_Device::~I2C_Device() {}
 
-bool I2C-Device::initDevice() {
+bool I2C_Device::initDevice() {
   mI2C_device_name = "/dev/i2c-" + std::to_string((int)mBus);
-  mFile = open(mI2C_device_name, O_RDWR);
+  mFile = open(mI2C_device_name.c_str(), O_RDWR);
   if (mFile) {
     return true;
   }
   return false;
 }
 
-int I2C-Device::readBytes(uint8_t count, uint8_t *buffer) {
+int I2C_Device::readBytes(uint8_t count, uint8_t *buffer) {
   struct i2c_rdwr_ioctl_data packets;
   struct i2c_msg messages[2];
   /* write the register we want to read from */
   messages[0].addr  = mAddress[0];
   messages[0].flags = 0;
   messages[0].len   = 1;
-  messages[0].buf   = &mDataRegister[0];
+  messages[0].buf   = buffer;
 
   /* read */
   messages[1].addr  = mAddress[0];
@@ -41,11 +41,11 @@ int I2C-Device::readBytes(uint8_t count, uint8_t *buffer) {
   return ioctl(mFile, I2C_RDWR, &packets) >= 0;
 }
 
-int I2C-Device::writeBytes(uint8_t count, uint8_t *input) {
+int I2C_Device::writeBytes(uint8_t count, uint8_t *input) {
   struct i2c_rdwr_ioctl_data packets;
   struct i2c_msg messages[1];
 
-  messages[0].addr  = mAddress;
+  messages[0].addr  = mAddress[0];
   messages[0].flags = 0;
   messages[0].len   = count;
   messages[0].buf   = input; // needs to be an array w/ first being register
@@ -58,13 +58,13 @@ int I2C-Device::writeBytes(uint8_t count, uint8_t *input) {
 }
 
 
-explicit TemperatureSensor(uint8_t bus, uint8_t address, uint8_t ID_register,
+TemperatureSensor::TemperatureSensor(uint8_t bus, uint8_t address, uint8_t ID_register,
   uint8_t controlRegister, uint8_t dataRegister) {
     mBus = bus;
-    mAddress.pushback(address);
-    mID_Regsiters.pushback(ID_register);
-    mControlRegisters.pushback(controlRegister);
-    mDataRegisters.pushback(dataRegister);
+    mAddress.push_back(address);
+    mID_Regsiters.push_back(ID_register);
+    mControlRegisters.push_back(controlRegister);
+    mDataRegisters.push_back(dataRegister);
 }
 
 TemperatureSensor::~TemperatureSensor() {}
@@ -72,7 +72,10 @@ TemperatureSensor::~TemperatureSensor() {}
 
 bool TemperatureSensor::initTempSensor() {
   uint8_t input[2] = {mControlRegisters[0], 0x98};
-  writeBytes (2, input);
+  if (writeBytes (2, input)) {
+    return true;
+  }
+  return false;
 }
 
 uint8_t TemperatureSensor::readTemp() {
