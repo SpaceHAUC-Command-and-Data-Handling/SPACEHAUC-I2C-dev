@@ -39,12 +39,20 @@ int I2C-Device::readBytes(uint8_t count) {
   return ioctl(bus, I2C_RDWR, &packets) >= 0;
 }
 
+int I2C-Device::writeBytes(uint8_t count) {
+  struct i2c_rdwr_ioctl_data packets;
+  struct i2c_msg messages[1];
 
+  messages[0].addr  = mAddress;
+  messages[0].flags = 0;
+  messages[0].len   = count;
+  messages[0].buf   = mTata;
 
+  packets.msgs      = messages;
+  packets.nmsgs     = 1;
 
-
-
-
+  return ioctl(bus, I2C_RDWR, &packets) >= 0 ;
+}
 
 
 explicit TemperatureSensor(uint8_t bus, uint8_t address, uint8_t ID_register,

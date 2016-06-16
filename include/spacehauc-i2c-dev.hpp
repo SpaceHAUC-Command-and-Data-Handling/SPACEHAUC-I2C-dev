@@ -16,7 +16,7 @@ protected:
   vector<uint8_t> mAddress(1);
   vector<uint8_t> mID_Regsiters(1);
   int readBytes(uint8_t count);
-  int writeBytes;
+  int writeBytes(uint8_t count);
 public:
   I2C-Device();
   ~I2C-Device();
