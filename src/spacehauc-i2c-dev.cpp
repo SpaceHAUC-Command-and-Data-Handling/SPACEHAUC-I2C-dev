@@ -20,14 +20,14 @@ bool I2C_Device::initDevice() {
   return false;
 }
 
-int I2C_Device::readBytes(uint8_t count, uint8_t *buffer) {
+int I2C_Device::readBytes(uint8_t reg, uint8_t *buffer, uint8_t count) {
   struct i2c_rdwr_ioctl_data packets;
   struct i2c_msg messages[2];
   /* write the register we want to read from */
   messages[0].addr  = mAddress[0];
   messages[0].flags = 0;
   messages[0].len   = 1;
-  messages[0].buf   = mDataRegisters[0];
+  messages[0].buf   = &reg;
 
   /* read */
   messages[1].addr  = mAddress[0];
