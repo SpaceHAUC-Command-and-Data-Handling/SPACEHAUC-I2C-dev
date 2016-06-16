@@ -6,6 +6,7 @@
 #include <linux/i2c-dev.h>
 #include <fcntl.h>
 #include <iostream>
+#include <unistd.h>
 
 using std::vector;
 using std::string;
