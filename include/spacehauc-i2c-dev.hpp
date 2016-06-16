@@ -1,3 +1,9 @@
+/*!
+ * @file
+ */
+ 
+// Copyright 2016 UMass Lowell Command and Data Handling Team
+
 #ifndef INCLUDE_SPACEHAUC_I2C_DEV_HPP_
 #define INCLUDE_SPACEHAUC_I2C_DEV_HPP_
 
@@ -7,13 +13,15 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 #include <fcntl.h>
-//#include <getopt.h>
-//#include <stdlib.h>
 
 using std::vector;
 using std::string;
 
-class I2C_Device { //eg 9dof sensor
+/*!
+ * This is a class for any i2c device to inherit from. All i2c devices need
+ * these methods.
+ */
+class I2C_Device {
 protected:
   string mI2C_device_name;
   uint8_t mBus;
@@ -28,10 +36,14 @@ public:
   bool initDevice();
 };
 
+/*!
+ * This is a class for a temperature sensor, specifically the 9DoF board's
+ * sensor.
+ */
 class TemperatureSensor : public I2C_Device {
 private:
-  vector<uint8_t> mDataRegisters; //data registers
-  vector<uint8_t> mControlRegisters; // control registers
+  vector<uint8_t> mDataRegisters;
+  vector<uint8_t> mControlRegisters;
   uint8_t mTemperature;
 public:
   explicit TemperatureSensor(uint8_t bus, uint8_t address, uint8_t ID_register,

@@ -1,3 +1,9 @@
+/*!
+ * @file
+ */
+
+// Copyright 2016 UMass Lowell Command and Data Handling Team
+
 #include "spacehauc-i2c-dev.hpp"
 #include <string>
 #include <vector>
@@ -5,12 +11,30 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 #include <fcntl.h>
+
 using std::string;
 
+/*!
+ * Constructor for I2C Device. Currently has no functionality, it may in
+ * a future release.
+ *
+ */
 I2C_Device::I2C_Device() {}
 
+/*!
+ * Destructor for I2C Device. Currently has no functionality, it may in
+ * a future release.
+ *
+ */
 I2C_Device::~I2C_Device() {}
 
+/*!
+ * initDevice sets the member variable I2C_device_name of the I2C_Device class
+ * to the name of the i2c bus (usually /dev/i2c-1)
+ * It then opens the bus for reading and writing.
+ *
+ * @return success/failure
+ */
 bool I2C_Device::initDevice() {
   mI2C_device_name = "/dev/i2c-" + std::to_string((int)mBus);
   mFile = open(mI2C_device_name.c_str(), O_RDWR);
@@ -20,6 +44,17 @@ bool I2C_Device::initDevice() {
   return false;
 }
 
+/*!
+ * readBytes first edits the i2c_rdwr_ioctl_data and i2c_msg structs to include
+ * parameter data. It then calls the ioctl() function to read data from data
+ * register. This data is stored in the buffer
+ *
+ * @param reg The data register to read from.
+ * @param *buffer Pointer to a buffer to store read data.
+ * @param count The number of elements in the buffer.
+ *
+ * @return success/failure
+ */
 int I2C_Device::readBytes(uint8_t reg, uint8_t *buffer, uint8_t count) {
   struct i2c_rdwr_ioctl_data packets;
   struct i2c_msg messages[2];
@@ -41,6 +76,16 @@ int I2C_Device::readBytes(uint8_t reg, uint8_t *buffer, uint8_t count) {
   return ioctl(mFile, I2C_RDWR, &packets) >= 0;
 }
 
+/*!
+ * writeBytes writes input data to an i2c register. It first edits the
+ * i2c_rdwr_ioctl_data and i2c_msg structs to include parameter data. Then it
+ * calls the ioctl() function to write the data.
+ *
+ * @param count The number of elements in the input.
+ * @param *input A pointer to an array of input data
+ *
+ * @return success/failure
+ */
 int I2C_Device::writeBytes(uint8_t count, uint8_t *input) {
   struct i2c_rdwr_ioctl_data packets;
   struct i2c_msg messages[1];
@@ -57,7 +102,20 @@ int I2C_Device::writeBytes(uint8_t count, uint8_t *input) {
   return ioctl(mFile, I2C_RDWR, &packets) >= 0 ;
 }
 
-
+/*!
+ * Constructor for a Temperature Sensor. It initializes member variables based
+ * on input parameters
+ *
+ * @param bus This is the i2c bus that the sensor is connected to
+ * @param address This is the address of the sensor on the bus. See sensor
+ *        datasheet for info
+ * @param ID_register This is the register that identifies the device. See
+ *        sensor datasheet for info
+ * @param controlRegister This is the register that controls the temperature
+ *        sensor. See sensor datasheet for info.
+ * @param dataRegister This is the register that measured temperature data is
+ *        stored in. See sensor datasheet for info.
+ */
 TemperatureSensor::TemperatureSensor(uint8_t bus, uint8_t address, uint8_t ID_register,
   uint8_t controlRegister, uint8_t dataRegister) {
     mBus = bus;
@@ -69,7 +127,12 @@ TemperatureSensor::TemperatureSensor(uint8_t bus, uint8_t address, uint8_t ID_re
 
 TemperatureSensor::~TemperatureSensor() {}
 
-
+/*!
+ * initTempSensor initializes the temperature sensor by writing to the control
+ * register.
+ *
+ * @return  success/failure
+ */
 bool TemperatureSensor::initTempSensor() {
   uint8_t input[2] = {mControlRegisters[0], 0x98};
   if (writeBytes (2, input)) {
@@ -78,6 +141,11 @@ bool TemperatureSensor::initTempSensor() {
   return false;
 }
 
+/*!
+ * readTemp reads data from the data register using readBytes()
+ *
+ * @return mTemperature the temperature
+ */
 uint8_t TemperatureSensor::readTemp() {
   readBytes (mDataRegisters[0], &mTemperature, 2);
   return mTemperature;
