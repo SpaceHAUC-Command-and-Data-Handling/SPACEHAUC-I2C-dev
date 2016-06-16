@@ -3,7 +3,12 @@
 
 #include <string>
 #include <vector>
-
+#include <sys/ioctl.h>
+#include <linux/i2c.h>
+#include <linux/i2c-dev.h>
+#include <fcntl.h>
+//#include <getopt.h>
+//#include <stdlib.h>
 
 using std::vector;
 using std::string;
@@ -15,11 +20,11 @@ protected:
   int mFile;
   vector<uint8_t> mAddress(1);
   vector<uint8_t> mID_Regsiters(1);
-  int readBytes(uint8_t count);
-  int writeBytes(uint8_t count);
+  int readBytes(uint8_t count, uint8_t *buffer);
+  int writeBytes(uint8_t count, uint8_t *input);
 public:
   I2C-Device();
-  ~I2C-Device();
+  virtual ~I2C-Device();
   bool initDevice();
 };
 
