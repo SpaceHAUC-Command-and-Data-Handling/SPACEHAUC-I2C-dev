@@ -20,7 +20,7 @@ protected:
   int mFile;
   vector<uint8_t> mAddress;
   vector<uint8_t> mID_Regsiters;
-  int readBytes(uint8_t count, uint8_t *buffer);
+  int readBytes(uint8_t reg, uint8_t *buffer, uint8_t count);
   int writeBytes(uint8_t count, uint8_t *input);
 public:
   I2C_Device();
