@@ -27,7 +27,7 @@ int I2C_Device::readBytes(uint8_t count, uint8_t *buffer) {
   messages[0].addr  = mAddress[0];
   messages[0].flags = 0;
   messages[0].len   = 1;
-  messages[0].buf   = buffer;
+  messages[0].buf   = mDataRegisters[0];
 
   /* read */
   messages[1].addr  = mAddress[0];
