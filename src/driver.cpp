@@ -45,6 +45,7 @@ bool testTemperatureSensor() {
   cout << "Reading Temperature data..." << endl;
   for (int i = 0; i < 5; i++) {
     cout << "Temperature = " << tempSensor.readTemp() << endl;
+    usleep(500000);
   }
   return true;
 }
