@@ -37,6 +37,8 @@ fcntl.h
 -
 iostream
 -
+unistd.h
+-
 
 /home/david/Hauc/SPACEHAUC-I2C-dev/src/spacehauc-i2c-dev.cpp
 spacehauc-i2c-dev.hpp
