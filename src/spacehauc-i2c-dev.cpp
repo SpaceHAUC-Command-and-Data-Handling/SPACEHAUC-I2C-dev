@@ -79,6 +79,6 @@ bool TemperatureSensor::initTempSensor() {
 }
 
 uint8_t TemperatureSensor::readTemp() {
-  readBytes (2, &mTemperature);
+  readBytes (mDataRegisters[0], &mTemperature, 2);
   return mTemperature;
 }
