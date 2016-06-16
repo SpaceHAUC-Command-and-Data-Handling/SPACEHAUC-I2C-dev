@@ -1,5 +1,5 @@
 <!-- Replace the below line with your own Travis-CI build label. -->
-<!-- [![Build Status](https://travis-ci.org/SpaceHAUC-Command-and-Data-Handling/SPACEHAUC-I2C-dev.svg?branch=master)]-->
+[![Build Status](https://travis-ci.org/SpaceHAUC-Command-and-Data-Handling/SPACEHAUC-I2C-dev.svg?branch=master)](https://travis-ci.org/SpaceHAUC-Command-and-Data-Handling/SPACEHAUC-I2C-dev)
 [![Managed with Taiga.io](https://taiga.io/media/support/attachments/article-22/banner-gh.png)](https://taiga.io "Managed with Taiga.io")
 
 ## SPACEHAUC I2C DEV TOOLS ALPHA v0.1.0
